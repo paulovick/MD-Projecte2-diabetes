@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from convert_functions import convert_age, convert_gender, convert_change
+from convert_functions import convert_gender, convert_age, convert_admission_type, convert_change
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
@@ -10,8 +10,9 @@ dest_path = 'dataset_diabetes/diabetic_data_output.csv'
 
 dataset = pd.read_csv(path, na_values=['?','None'], nrows=10)
 
-dataset['age'] = dataset['age'].apply(convert_age)
 dataset['gender'] = dataset['gender'].apply(convert_gender)
+dataset['age'] = dataset['age'].apply(convert_age)
+dataset['admission_type_id'] = dataset['admission_type_id'].apply(convert_admission_type)
 dataset['change'] = dataset['change'].apply(convert_change)
 
 dataset.to_csv(dest_path)

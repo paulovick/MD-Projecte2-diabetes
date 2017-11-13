@@ -66,3 +66,8 @@ admission_source_id,description
 24, Born outside this hospital
 25, Transfer from Ambulatory Surgery Center
 26,Transfer from Hospice
+,
+gender_id,description
+0,Male
+1,Female
+None,Unknown
