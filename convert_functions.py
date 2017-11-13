@@ -6,5 +6,18 @@ def convert_age(value):
     result = re.findall(regex_pattern, value)[0]
     return result
 
+def convert_gender(value):
+    if value:
+        if value == "Male":
+            return 0
+        else:
+            return 1
+    return None
+
 def convert_change(value):
-    return value
+    if value:
+        if value == "Ch":
+            return True
+        else:
+            return False
+    return None

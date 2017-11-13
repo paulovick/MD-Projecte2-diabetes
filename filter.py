@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from convert_functions import convert_age, convert_change
+from convert_functions import convert_age, convert_gender, convert_change
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
@@ -11,6 +11,7 @@ dest_path = 'dataset_diabetes/diabetic_data_output.csv'
 dataset = pd.read_csv(path, na_values=['?','None'], nrows=10)
 
 dataset['age'] = dataset['age'].apply(convert_age)
+dataset['gender'] = dataset['gender'].apply(convert_gender)
 dataset['change'] = dataset['change'].apply(convert_change)
 
 dataset.to_csv(dest_path)
@@ -34,8 +35,8 @@ dataset.to_csv(dest_path)
 # from os import system
 
 # X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.3, random_state=0)
-# print(X_train.shape)
-# print(X_test.shape)
+# # print(X_train.shape)
+# # print(X_test.shape)
 
 # from sklearn.tree import DecisionTreeClassifier
 
