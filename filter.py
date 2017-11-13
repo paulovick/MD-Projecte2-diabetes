@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import re
-import convert_functions
+from convert_functions import convert_age, convert_change
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
