@@ -1,25 +1,69 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from convert_functions import convert_gender, convert_age, convert_admission_type, convert_change
+from convert_functions import *
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
 
-# headers = ['encounter_id','patient_nbr','race','gender','age','weight','admission_type_id','discharge_disposition_id','admission_source_id','time_in_hospital','payer_code','medical_specialty','num_lab_procedures','num_procedures','num_medications','number_outpatient','number_emergency','number_inpatient','diag_1','diag_2','diag_3','number_diagnoses','max_glu_serum','A1Cresult','metformin','repaglinide','nateglinide','chlorpropamide','glimepiride','acetohexamide','glipizide','glyburide','tolbutamide','pioglitazone','rosiglitazone','acarbose','miglitol','troglitazone','tolazamide','examide','citoglipton','insulin','glyburide-metformin','glipizide-metformin','glimepiride-pioglitazone','metformin-rosiglitazone','metformin-pioglitazone','change','diabetesMed','readmitted']
+column_functions = {
+    'encounter_id': None,
+    'patient_nbr': None,
+    'race': convert_race,
+    'gender': convert_gender,
+    'age': convert_age,
+    'admission_type_id': convert_admission_type,
+    'discharge_disposition_id': convert_discharge_disposition,
+    'admission_source_id': convert_admission_source,
+    'time_in_hospital': None,
+    'medical_specialty': convert_medical_specialty,
+    'num_lab_procedures': None,
+    'num_procedures': None,
+    'num_medications': None,
+    'number_outpatient': None,
+    'number_emergency': None,
+    'number_inpatient': None,
+    'diag_1': None,
+    'diag_2': None,
+    'diag_3': None,
+    'number_diagnoses': None,
+    'max_glu_serum': None,
+    'A1Cresult': None,
+    'change': convert_change,
+    'diabetesMed': convert_diabetesMed,
+    'readmitted': convert_readmitted
+}
 
-dataset = pd.read_csv(path, na_values=['?','None'], nrows=10)
+dataset = pd.read_csv(path, na_values=['?','None','nan'])#, nrows=1000)
 
-dataset['gender'] = dataset['gender'].apply(convert_gender)
-dataset['age'] = dataset['age'].apply(convert_age)
-dataset['admission_type_id'] = dataset['admission_type_id'].apply(convert_admission_type)
-dataset['change'] = dataset['change'].apply(convert_change)
+# def find_numbers(medical_specialty):
+#     num = 0
+#     for item in enumerate(dataset['medical_specialty']):
+#         if item[1] == medical_specialty:
+#             num += 1
+#     print str(medical_specialty) + ': ' + str(num)
 
-dataset.to_csv(dest_path)
+# for speciality in dataset['medical_specialty'].unique():
+#     find_numbers(speciality)
+
+print dataset['max_glu_serum'].unique()
+
+dataset = dataset.drop('weight',1)
+dataset = dataset.drop('payer_code',1)
+
+for column in dataset:
+    if column not in column_functions.keys():
+        dataset[column] = dataset[column].apply(convert_generic)
+    elif column_functions[column] != None:
+        dataset[column] = dataset[column].apply(column_functions[column])
+    else:
+        dataset[column] = dataset[column].apply(convert_base)
+
+# dataset.to_csv(dest_path, index=False)
 
 # print(dataset.shape)
-# X = np.array(dataset[['race','gender','age','weight','admission_type_id','discharge_disposition_id','admission_source_id','time_in_hospital']])
-# y = np.array(dataset['diabetesMed'])
+# X = np.array(dataset.drop('readmitted',1))
+# y = np.array(dataset['readmitted'])
 
 # from sklearn import preprocessing
 # import matplotlib.pyplot as plt
@@ -27,8 +71,8 @@ dataset.to_csv(dest_path)
 # encoder = preprocessing.LabelEncoder()
 
 # encoder.fit(y)
-# plt.scatter(X[:,0], y, c=encoder.transform(y), cmap=plt.cm.Paired)
-# plt.show()
+# # plt.scatter(X[:,0], y, c=encoder.transform(y), cmap=plt.cm.Paired)
+# # plt.show()
 
 # from sklearn import cross_validation
 # from sklearn.tree import DecisionTreeClassifier

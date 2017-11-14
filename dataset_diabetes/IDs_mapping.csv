@@ -67,7 +67,24 @@ admission_source_id,description
 25, Transfer from Ambulatory Surgery Center
 26,Transfer from Hospice
 ,
+race_id,description
+0,Caucasian
+1,AfricanAmerican
+2,Asian
+3,Hispanic
+4,Other
+,
 gender_id,description
 0,Male
 1,Female
-None,Unknown
+,
+readmitted_id,description
+0,NO
+1,<30
+2,>30
+,
+generic_id,description
+0,No
+1,Steady
+2,Up
+3,Down
