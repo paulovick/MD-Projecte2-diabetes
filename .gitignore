@@ -1,2 +1,3 @@
 *.pyc
 dataset_diabetes/diabetic_data_output.csv
+.idea/
