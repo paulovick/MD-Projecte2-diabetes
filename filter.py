@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from convert_functions import *
+from utils import *
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
@@ -36,17 +37,8 @@ column_functions = {
 
 dataset = pd.read_csv(path, na_values=['?','None','nan'])#, nrows=1000)
 
-# def find_numbers(medical_specialty):
-#     num = 0
-#     for item in enumerate(dataset['medical_specialty']):
-#         if item[1] == medical_specialty:
-#             num += 1
-#     print str(medical_specialty) + ': ' + str(num)
-
-# for speciality in dataset['medical_specialty'].unique():
-#     find_numbers(speciality)
-
-print dataset['max_glu_serum'].unique()
+# find_rows_by_unique_values(dataset, 'medical_specialty')
+find_nones(dataset)
 
 dataset = dataset.drop('weight',1)
 dataset = dataset.drop('payer_code',1)
@@ -59,7 +51,7 @@ for column in dataset:
     else:
         dataset[column] = dataset[column].apply(convert_base)
 
-# dataset.to_csv(dest_path, index=False)
+dataset.to_csv(dest_path, index=False)
 
 # print(dataset.shape)
 # X = np.array(dataset.drop('readmitted',1))

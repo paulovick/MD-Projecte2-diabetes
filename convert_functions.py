@@ -1,7 +1,13 @@
 
 import re
+from random import randint
 
-def convert_base(value):
+def convert_base(value, none_probability=None):
+    rand = randint(1,10)
+    if none_probability == None:
+        return value
+    if rand <= none_probability:
+        return None
     return value
 
 def convert_generic(value):
