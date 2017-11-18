@@ -42,5 +42,4 @@ def naive_bayes(df):
     print()
     print(metrics.classification_report(y_test, pred))
     epsilon = sklearn.metrics.accuracy_score(y_test, pred)
-    exit(1)
     proportion_confint(count=epsilon*X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test')
