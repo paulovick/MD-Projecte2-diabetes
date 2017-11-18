@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from convert_functions import *
 from utils import *
+from naive_bayes import naive_bayes
 
 path = 'dataset_diabetes/diabetic_data.csv'
 dest_path = 'dataset_diabetes/diabetic_data_output.csv'
@@ -38,21 +39,20 @@ column_functions = {
 dataset = pd.read_csv(path, na_values=['?','None','nan'])#, nrows=1000)
 
 # find_rows_by_unique_values(dataset, 'medical_specialty')
-find_nones(dataset)
+# find_nones(dataset)
 
 dataset = dataset.drop('weight',1)
 dataset = dataset.drop('payer_code',1)
 
-for column in dataset:
-    if column not in column_functions.keys():
-        dataset[column] = dataset[column].apply(convert_generic)
-    elif column_functions[column] != None:
-        dataset[column] = dataset[column].apply(column_functions[column])
-    else:
-        dataset[column] = dataset[column].apply(convert_base)
+# for column in dataset:
+#     if column not in column_functions.keys():
+#         dataset[column] = dataset[column].apply(convert_generic)
+#     elif column_functions[column] != None:
+#         dataset[column] = dataset[column].apply(column_functions[column])
+#     else:
+#         dataset[column] = dataset[column].apply(convert_base)
 
-dataset.to_csv(dest_path, index=False)
-
+naive_bayes(dataset)
 # print(dataset.shape)
 # X = np.array(dataset.drop('readmitted',1))
 # y = np.array(dataset['readmitted'])
