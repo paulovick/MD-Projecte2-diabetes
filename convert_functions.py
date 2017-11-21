@@ -233,11 +233,48 @@ def convert_change(value):
 
 def convert_diag(value):
     value = convert_base(value)
-    if str(value)[0] == 'V':
-        return None
-    elif str(value)[0] == 'E':
-        return None
-    return float(value)
+    if value != None:
+        try:
+            value = float(value)
+        except:
+            value = str(value)
+            return 17
+        
+        if value <= 139:
+            return 0
+        elif value >= 140 or value <= 239:
+            return 1 
+        elif value >= 240 or value <= 279:
+            return 2
+        elif value >= 280 or value <= 289:
+            return 3
+        elif value >= 290 or value <= 319:
+            return 4
+        elif value >= 320 or value <= 389:
+            return 5
+        elif value >= 390 or value <= 459:
+            return 6
+        elif value >= 460 or value <= 519:
+            return 7
+        elif value >= 520 or value <= 579:
+            return 8
+        elif value >= 580 or value <= 629:
+            return 9
+        elif value >= 630 or value <= 679:
+            return 10
+        elif value >= 680 or value <= 709:
+            return 11
+        elif value >= 710 or value <= 739:
+            return 12
+        elif value >= 740 or value <= 759:
+            return 13
+        elif value >= 760 or value <= 779:
+            return 14
+        elif value >= 780 or value <= 799:
+            return 15
+        elif value >= 800 or value <= 999:
+            return 16
+    return None
 
 def convert_diabetesMed(value):
     value = convert_base(value)

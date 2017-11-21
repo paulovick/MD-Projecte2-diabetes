@@ -56,18 +56,11 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
                 dataset[column] = dataset[column].apply(column_functions[column])
             else:
                 dataset[column] = dataset[column].apply(convert_base)
-    
-        print(dataset.diag_1.unique())
 
         # Erase nulls
 
-        #dataset = dataset.fillna(dataset.mean())
-        #print(dataset.isnull().any())
-
-        #def fit_func(x, a, b):
-        #    return a*x+b
-
-        #params = curve_fit(fit_func, dataset['admission_source_id'], dataset['discharge_disposition_id'])
+        dataset = dataset.fillna(dataset.mean())
+        print(dataset.isnull().any())
 
     # Save
 
