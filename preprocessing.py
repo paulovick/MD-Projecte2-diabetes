@@ -3,6 +3,7 @@ import pandas as pd
 from convert_functions import *
 import matplotlib.pyplot as plt
 from pandas.tools import plotting
+from scipy.optimize import curve_fit
 
 def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,save_csv=False):
     path = 'dataset_diabetes/diabetic_data.csv'
@@ -18,8 +19,8 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
         column_functions = {
             'encounter_id': None,
             'patient_nbr': None,
-            'race': None,#convert_race,
-            'gender': None,#convert_gender,
+            'race': convert_race,
+            'gender': convert_gender,
             'age': convert_age,
             'admission_type_id': convert_admission_type,
             'discharge_disposition_id': convert_discharge_disposition,
@@ -48,13 +49,24 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
 
         for column in dataset:
             if column not in column_functions.keys():
-                #dataset[column] = dataset[column].apply(convert_generic)
-                i = 0
+                dataset[column] = dataset[column].apply(convert_generic)
             elif column_functions[column] != None:
                 dataset[column] = dataset[column].apply(column_functions[column])
             else:
                 dataset[column] = dataset[column].apply(convert_base)
     
+        # Erase nulls
+
+        print(dataset.mean())
+        dataset = dataset.fillna(dataset.mean())
+
+        #def fit_func(x, a, b):
+        #    return a*x+b
+
+        #params = curve_fit(fit_func, dataset['admission_source_id'], dataset['discharge_disposition_id'])
+
+    # Save
+
     if save_csv:
         dataset.to_csv(dest_path, index=False)
     
