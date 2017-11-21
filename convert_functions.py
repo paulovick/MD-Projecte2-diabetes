@@ -226,18 +226,26 @@ def convert_change(value):
     value = convert_base(value)
     if value != None:
         if value == 'Ch':
-            return True
+            return 1
         elif value == 'No':
-            return False
+            return 0
     return None
+
+def convert_diag(value):
+    value = convert_base(value)
+    if str(value)[0] == 'V':
+        return None
+    elif str(value)[0] == 'E':
+        return None
+    return float(value)
 
 def convert_diabetesMed(value):
     value = convert_base(value)
     if value != None:
         if value == 'Yes':
-            return True
+            return 1
         elif value == 'No':
-            return False
+            return 0
     return None
 
 def convert_readmitted(value):
@@ -248,5 +256,5 @@ def convert_readmitted(value):
         elif value == '<30':
             return 1
         elif value == '>30':
-            return 2
+            return 1
     return None
