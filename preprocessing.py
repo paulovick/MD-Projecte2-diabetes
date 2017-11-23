@@ -59,10 +59,11 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
                     dataset[column] = dataset[column].apply(column_functions[column])
                 else:
                     dataset[column] = dataset[column].apply(convert_base)
+
         # Erase nulls
 
         dataset = dataset.fillna(round(dataset.mean()))
-        print(dataset.isnull().any())
+        #print(dataset.isnull().any())
 
     # Save
 
