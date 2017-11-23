@@ -46,10 +46,27 @@ def test_profe():
 
 
 def test_naive():
-    path = '../dataset_diabetes/diabetic_data.csv'
+    path = '../dataset_diabetes/diabetic_data_output.csv'
     df = pd.read_csv(path)
-    print (df.describe(include='all'))
-    print (df.values[:,[1,6,7,8,9]])
+    #print (df.corr())
+    def get_redundant_pairs(df):
+        '''Get diagonal and lower triangular pairs of correlation matrix'''
+        pairs_to_drop = set()
+        cols = df.columns
+        for i in range(0, df.shape[1]):
+            for j in range(0, i + 1):
+                pairs_to_drop.add((cols[i], cols[j]))
+        return pairs_to_drop
+
+    def get_top_abs_correlations(df, n=5):
+        au_corr = df.corr().abs().unstack()
+        labels_to_drop = get_redundant_pairs(df)
+        au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
+        return au_corr[0:n]
+
+    print("Top Absolute Correlations")
+    print(get_top_abs_correlations(df, 10))
+    #print (df.values[:,[1,6,7,8,9]])
     # insulin
     # admission_type_id, discharge_disposition_id
     # admission_source_id

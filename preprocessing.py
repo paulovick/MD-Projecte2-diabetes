@@ -50,16 +50,18 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
         dataset = dataset.drop('payer_code',1)
 
         for column in dataset:
-            if column not in column_functions.keys():
-                dataset[column] = dataset[column].apply(convert_generic)
-            elif column_functions[column] != None:
-                dataset[column] = dataset[column].apply(column_functions[column])
+            if dataset[column].nunique() == 1:
+                dataset = dataset.drop(column, 1)
             else:
-                dataset[column] = dataset[column].apply(convert_base)
-
+                if column not in column_functions.keys():
+                    dataset[column] = dataset[column].apply(convert_generic)
+                elif column_functions[column] != None:
+                    dataset[column] = dataset[column].apply(column_functions[column])
+                else:
+                    dataset[column] = dataset[column].apply(convert_base)
         # Erase nulls
 
-        dataset = dataset.fillna(dataset.mean())
+        dataset = dataset.fillna(round(dataset.mean()))
         print(dataset.isnull().any())
 
     # Save
