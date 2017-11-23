@@ -3,6 +3,7 @@ import pandas as pd
 from convert_functions import *
 import matplotlib.pyplot as plt
 from pandas.tools import plotting
+from scipy.optimize import curve_fit
 
 def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,save_csv=False):
     path = 'dataset_diabetes/diabetic_data.csv'
@@ -18,8 +19,8 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
         column_functions = {
             'encounter_id': None,
             'patient_nbr': None,
-            'race': None,#convert_race,
-            'gender': None,#convert_gender,
+            'race': convert_race,
+            'gender': convert_gender,
             'age': convert_age,
             'admission_type_id': convert_admission_type,
             'discharge_disposition_id': convert_discharge_disposition,
@@ -32,29 +33,37 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
             'number_outpatient': None,
             'number_emergency': None,
             'number_inpatient': None,
-            'diag_1': None,
-            'diag_2': None,
-            'diag_3': None,
+            'diag_1': convert_diag,
+            'diag_2': convert_diag,
+            'diag_3': convert_diag,
             'number_diagnoses': None,
-            'max_glu_serum': None,
-            'A1Cresult': None,
             'change': convert_change,
             'diabetesMed': convert_diabetesMed,
             'readmitted': convert_readmitted
         }
 
+        dataset = dataset.drop('encounter_id',1)
+        dataset = dataset.drop('patient_nbr',1)
+        dataset = dataset.drop('max_glu_serum',1)
+        dataset = dataset.drop('A1Cresult',1)
         dataset = dataset.drop('weight',1)
         dataset = dataset.drop('payer_code',1)
 
         for column in dataset:
             if column not in column_functions.keys():
-                #dataset[column] = dataset[column].apply(convert_generic)
-                i = 0
+                dataset[column] = dataset[column].apply(convert_generic)
             elif column_functions[column] != None:
                 dataset[column] = dataset[column].apply(column_functions[column])
             else:
                 dataset[column] = dataset[column].apply(convert_base)
-    
+
+        # Erase nulls
+
+        dataset = dataset.fillna(dataset.mean())
+        print(dataset.isnull().any())
+
+    # Save
+
     if save_csv:
         dataset.to_csv(dest_path, index=False)
     
