@@ -1,13 +1,15 @@
 from naive_bayes import naive_bayes
+from svm import svm
 from preprocessing import *
 
-dataset = read_and_filter_dataset(preprocess=True,nrows=5000,save_csv=True)
+dataset = read_and_filter_dataset(preprocess=True,nrows=6000,save_csv=True)
 #dataset = read_and_filter_dataset(use_preprocessed=True)
 
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
 
-naive_bayes(dataset)
+#naive_bayes(dataset)
+svm(dataset)
 
 # from sklearn import preprocessing
 # import matplotlib.pyplot as plt
