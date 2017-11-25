@@ -1,49 +1,52 @@
-import numpy as np                     # Llibreria matemÃ tica
-import matplotlib.pyplot as plt        # Per mostrar plots
-import sklearn                         # Llibreia de DM
-import sklearn.datasets as ds            # Per carregar mÃ©s facilment el dataset digits
-import sklearn.model_selection as cv    # Pel Cross-validation
-import sklearn.neighbors as nb           # Per fer servir el knn
-# Obtain Recall, Precision and F-Measure for each class
-from sklearn import metrics
-
+import numpy as np  # Llibreria matemÃ tica
+import sklearn.model_selection as cv  # Pel Cross-validation
+from sklearn.ensemble import VotingClassifier
 # interval confidence
-from sklearn.cross_validation import cross_val_score
-from statsmodels.stats.proportion import proportion_confint
-
-from sklearn.naive_bayes import GaussianNB  # For numerical featuresm assuming normal distribution
-from sklearn.naive_bayes import MultinomialNB  # For features with counting numbers (f.i. hown many times word appears in doc)
+from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import BernoulliNB  # For binari features (f.i. word appears or not in document)
+from sklearn.naive_bayes import GaussianNB  # For numerical featuresm assuming normal distribution
+from sklearn.naive_bayes import \
+    MultinomialNB  # For features with counting numbers (f.i. hown many times word appears in doc)
+
+
+# Obtain Recall, Precision and F-Measure for each class
 
 
 def naive_bayes(df):
     y_name = "readmitted"  # y value to predict
     y = df[y_name].values
-    #i, = np.where(df.columns.values == y_name)  # index column of y value
-
+    i, = np.where(df.columns.values == y_name)  # index column of y value
+    X_total = np.delete(df.values, i, 1)
     X_bernoulli = bernoulli(y_name, df)
     X_multinomial, i_multinomial = multinomial(df)
     X_gaussian = gaussian(df, i_multinomial)
     X_array = (("Bernoulli", X_bernoulli), ("Multinomial", X_multinomial), ("Gaussian", X_gaussian))
 
+    estimators = []
+    vc = 50
     for method, X in X_array:
         # Let's do a simple cross-validation: split data into training and test sets (test 30% of data)
         (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.3, random_state=1)
 
         # No parameters to tune
-        vc = 50
-        clf = BernoulliNB()
+
+        if method == "Bernoulli":
+            clf = BernoulliNB()
+        elif method == "Multinomial":
+            clf = MultinomialNB()
+        else:
+            clf = GaussianNB()
+        clf.fit(X_train, y_train)
         scores = cross_val_score(clf, X, y, cv=vc, scoring='accuracy')
         print("%s Accuracy ( %s variables): %0.3f" % (method, len(X[0]), scores.mean()))
 
-        # pred = clf.fit(X_train, y_train).predict(X_test)
-        # print(sklearn.metrics.confusion_matrix(y_test, pred))
-        # print()
-        # print("%s acurracy:" % (method), sklearn.metrics.accuracy_score(y_test, pred))
-        # print()
-        # print(metrics.classification_report(y_test, pred))
-        # epsilon = sklearn.metrics.accuracy_score(y_test, pred)
-        # proportion_confint(count=epsilon * X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test')
+        scores = cross_val_score(clf, X_total, y, cv=vc, scoring='accuracy')
+        print("%s Accuracy total ( %s variables): %0.3f" % (method, len(X[0]), scores.mean()))
+        estimators.append((method, clf))
+
+    eclf = VotingClassifier(estimators=estimators, voting='hard')
+    scores = cross_val_score(eclf, X_total, y, cv=vc, scoring='accuracy')
+    print("Accuracy: %0.3f [%s]" % (scores.mean(), "Majority Voting"))
 
 def bernoulli(y_name, df):
     # Binaries
@@ -69,3 +72,10 @@ def gaussian(df, i_multinomial):
     return X
 
 
+# print(sklearn.metrics.confusion_matrix(y_test, pred))
+# print()
+# print("%s acurracy:" % (method), sklearn.metrics.accuracy_score(y_test, pred))
+# print()
+# print(metrics.classification_report(y_test, pred))
+# epsilon = sklearn.metrics.accuracy_score(y_test, pred)
+# proportion_confint(count=epsilon * X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test')
