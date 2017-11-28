@@ -60,7 +60,7 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
         # Erase nulls
 
         dataset = dataset.fillna(dataset.mean())
-        print(dataset.isnull().any())
+        # print(dataset.isnull().any())
 
     # Save
 
