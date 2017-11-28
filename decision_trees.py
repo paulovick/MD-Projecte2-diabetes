@@ -25,18 +25,19 @@ def execute_decision_trees(dataset):
     # print(X.shape)
     # print(X.head())
 
-    (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.25, random_state=1)
+    (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.3, random_state=0)
 
-    clf = tree.DecisionTreeClassifier(criterion="entropy")
-    pred = clf.fit(X_train, y_train).predict(X_test)
-    epsilon = sklearn.metrics.accuracy_score(y_test, pred)
+    clf = tree.DecisionTreeClassifier(criterion="entropy").fit(X_train, y_train)
+    pred = clf.predict(X_test)
+    score = sklearn.metrics.accuracy_score(y_test, pred)
 
+    print("Confusion matrix:")
     print(sklearn.metrics.confusion_matrix(y_test, pred))
     print()
-    print("Accuracy on test set: ", epsilon)
+    print("Accuracy on test set: ", score)
     print()
     print(sklearn.metrics.classification_report(y_test, pred))
-    print("Confidence interval: ", proportion_confint(count=epsilon*X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
+    print("Confidence interval: ", proportion_confint(count=score*X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
 
     # dot_data = StringIO()
     # tree.export_graphviz(clf, out_file=dot_data,
