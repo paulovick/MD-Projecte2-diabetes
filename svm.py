@@ -35,7 +35,7 @@ def svm(df):
     print("Confusion matrix on test set:\n", sklearn.metrics.confusion_matrix(y_test, pred))
     print("\nAccuracy on test set: ", sklearn.metrics.accuracy_score(y_test, pred))
 
-    knc = SVC(kernel='poly', degree=2)
+    knc = SVC(kernel='poly')
     knc.fit(X_train, y_train)
     pred = knc.predict(X_test)
     print("Confusion matrix on test set:\n", sklearn.metrics.confusion_matrix(y_test, pred))
@@ -47,11 +47,11 @@ def svm(df):
     print("Confusion matrix on test set:\n", sklearn.metrics.confusion_matrix(y_test, pred))
     print("\nAccuracy on test set: ", sklearn.metrics.accuracy_score(y_test, pred))
 
-    findCLineal(X_train, X_test, y_train, y_test)
+    #findCLineal(X_train, X_test, y_train, y_test)
 
-    findCPoly(X_train, X_test, y_train, y_test)
+    #findCPoly(X_train, X_test, y_train, y_test)
 
-    findC(X_train, y_train)
+    #findC(X_train, y_train)
 
 
 def findCLineal(X_train, X_test, y_train, y_test):
@@ -88,7 +88,7 @@ def findCLineal(X_train, X_test, y_train, y_test):
     print("\nAccuracy on test set: ", sklearn.metrics.accuracy_score(y_test, pred))
 
 def findCPoly(X_train, X_test, y_train, y_test):
-    Cs = np.logspace(-3, 11, num=15, base=10.0)
+    Cs = np.logspace(-3, 5, num=9, base=10.0)
 
     param_grid = {'C': Cs}
     grid_search = GridSearchCV(SVC(kernel='poly', degree=2), param_grid, cv=10)

@@ -19,14 +19,14 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
         column_functions = {
             'encounter_id': None,
             'patient_nbr': None,
-            'race': convert_race,
-            'gender': convert_gender,
-            'age': convert_age,
+            'race': None, #convert_race,
+            'gender': None, #convert_gender,
+            'age': None, #convert_age,
             'admission_type_id': convert_admission_type,
             'discharge_disposition_id': convert_discharge_disposition,
             'admission_source_id': convert_admission_source,
             'time_in_hospital': None,
-            'medical_specialty': convert_medical_specialty,
+            'medical_specialty': None, #convert_medical_specialty,
             'num_lab_procedures': None,
             'num_procedures': None,
             'num_medications': None,
@@ -62,6 +62,7 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
 
         # Erase nulls
 
+        dataset = pd.get_dummies(dataset, prefix=None)
         dataset = dataset.fillna(round(dataset.mean()))
         #print(dataset.isnull().any())
 
