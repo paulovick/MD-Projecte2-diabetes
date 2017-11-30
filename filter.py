@@ -1,20 +1,21 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-from utils import *
-import matplotlib.pyplot as plt
-from pandas.tools import plotting
+#from naive_bayes import naive_bayes
+#from svm import svm
+#from KNN import executeKNN
+from decisionTree import decisionTree
 from preprocessing import *
-
-dataset = read_and_filter_dataset(preprocess=True,nrows=5000,save_csv=True)
-#dataset = read_and_filter_dataset(use_preprocessed=True)
+from KNN import *
+#dataset = read_and_filter_dataset(preprocess=True,nrows=6000,save_csv=True)
+dataset = read_and_filter_dataset(use_preprocessed=True)
 
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
 
-# print(dataset.shape)
-# X = np.array(dataset.drop('readmitted',1))
-# y = np.array(dataset['readmitted'])
+#naive_bayes(dataset)
+#svm(dataset)
+if __name__ == "__main__":
+	#sense la linia de dalt, executeKNN quedara en loop infinit
+	executeKNN(dataset)
+	#decisionTree(dataset)
 
 # from sklearn import preprocessing
 # import matplotlib.pyplot as plt
