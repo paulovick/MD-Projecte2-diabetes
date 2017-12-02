@@ -15,21 +15,18 @@ from sklearn.naive_bayes import \
 from statsmodels.stats.proportion import proportion_confint
 
 
-def naive_bayes(df):
-    y_name = "readmitted"  # y value to predict
-    y = df[y_name].values
-    i, = np.where(df.columns.values == y_name)  # index column of y value
-    X_total = np.delete(df.values, i, 1)
-    X_bernoulli = bernoulli(y_name, df)
-    X_multinomial, i_multinomial = multinomial(df)
-    X_gaussian = gaussian(df, i_multinomial)
+def naive_bayes(X, y):
+    X_total = X
+    X_bernoulli = bernoulli(X)
+    X_multinomial, i_multinomial = multinomial(X)
+    X_gaussian = gaussian(X, i_multinomial)
     X_array = (("Bernoulli", X_bernoulli), ("Multinomial", X_multinomial), ("Gaussian", X_gaussian))
 
     estimators = []
     vc = 50
     for method, X in X_array:
         # Let's do a simple cross-validation: split data into training and test sets (test 30% of data)
-        (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.3, random_state=1)
+        (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.3, random_state=1, stratify=y)
 
         # No parameters to tune
 
@@ -59,7 +56,7 @@ def naive_bayes(df):
         print(proportion_confint(count=epsilon * X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
 
 
-    (X_train, X_test, y_train, y_test) = cv.train_test_split(X_total, y, test_size=.3, random_state=1)
+    (X_train, X_test, y_train, y_test) = cv.train_test_split(X_total, y, test_size=.3, random_state=1, stratify=y)
     eclf = VotingClassifier(estimators=estimators, voting='hard')
     scores = cross_val_score(eclf, X_train, y_train, cv=vc, scoring='accuracy')
     print("Accuracy: %0.3f [%s]" % (scores.mean(), "Majority Voting"))
@@ -88,10 +85,9 @@ def naive_bayes(df):
     plt.savefig('ConMatrix.png', dpi=600)
     plt.show()
 
-def bernoulli(y_name, df):
+def bernoulli(df):
     # Binaries
     nom_binaries = [col for col in df if df[col].nunique() == 2]
-    nom_binaries.remove(y_name)
     i_binaries = [np.where(df.columns.values == b)[0][0] for b in nom_binaries]
     X = df.values[:, i_binaries]
     return X
