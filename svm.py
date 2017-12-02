@@ -88,7 +88,7 @@ def findCLineal(X_train, X_test, y_train, y_test):
     print("\nAccuracy on test set: ", sklearn.metrics.accuracy_score(y_test, pred))
 
 def findCPoly(X_train, X_test, y_train, y_test):
-    Cs = np.logspace(-3, 5, num=9, base=10.0)
+    Cs = np.logspace(-2, 4, num=7, base=10.0)
 
     param_grid = {'C': Cs}
     grid_search = GridSearchCV(SVC(kernel='poly', degree=2), param_grid, cv=10)
