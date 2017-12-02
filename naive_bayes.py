@@ -2,6 +2,8 @@ import numpy as np  # Llibreria matemÃ tica
 import sklearn.model_selection as cv  # Pel Cross-validation
 from sklearn.ensemble import VotingClassifier
 # interval confidence
+import sklearn
+import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import BernoulliNB  # For binari features (f.i. word appears or not in document)
 from sklearn.naive_bayes import GaussianNB  # For numerical featuresm assuming normal distribution
@@ -10,6 +12,7 @@ from sklearn.naive_bayes import \
 
 
 # Obtain Recall, Precision and F-Measure for each class
+from statsmodels.stats.proportion import proportion_confint
 
 
 def naive_bayes(df):
@@ -36,7 +39,7 @@ def naive_bayes(df):
             clf = MultinomialNB()
         else:
             clf = GaussianNB()
-        clf.fit(X_train, y_train)
+        #clf.fit(X_train, y_train)
         scores = cross_val_score(clf, X, y, cv=vc, scoring='accuracy')
         print("%s Accuracy ( %s variables): %0.3f" % (method, len(X[0]), scores.mean()))
 
@@ -44,9 +47,46 @@ def naive_bayes(df):
         print("%s Accuracy total ( %s variables): %0.3f" % (method, len(X[0]), scores.mean()))
         estimators.append((method, clf))
 
+        pred = clf.fit(X_train, y_train).predict(X_test)
+        unique, counts = np.unique(y_test, return_counts=True)
+        print(dict(zip(unique, counts)))
+        print(sklearn.metrics.confusion_matrix(y_test, pred, labels=[0, 1]))
+        print()
+        print("Accuracy:", sklearn.metrics.accuracy_score(y_test, pred))
+        print()
+        print(sklearn.metrics.classification_report(y_test, pred))
+        epsilon = sklearn.metrics.accuracy_score(y_test, pred)
+        print(proportion_confint(count=epsilon * X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
+
+
+    (X_train, X_test, y_train, y_test) = cv.train_test_split(X_total, y, test_size=.3, random_state=1)
     eclf = VotingClassifier(estimators=estimators, voting='hard')
-    scores = cross_val_score(eclf, X_total, y, cv=vc, scoring='accuracy')
+    scores = cross_val_score(eclf, X_train, y_train, cv=vc, scoring='accuracy')
     print("Accuracy: %0.3f [%s]" % (scores.mean(), "Majority Voting"))
+    pred = clf.fit(X_train, y_train).predict(X_test)
+    unique, counts = np.unique(y_test, return_counts=True)
+    print(dict(zip(unique, counts)))
+    print(sklearn.metrics.confusion_matrix(y_test, pred, labels=[0,1]))
+    print()
+    print("Accuracy:", sklearn.metrics.accuracy_score(y_test, pred))
+    print()
+    print(sklearn.metrics.classification_report(y_test, pred))
+    epsilon = sklearn.metrics.accuracy_score(y_test, pred)
+    print(proportion_confint(count=epsilon * X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
+    confmat = sklearn.metrics.confusion_matrix(y_test, pred)
+
+    fig, ax = plt.subplots(figsize=(2.5, 2.5))
+    ax.matshow(confmat, cmap=plt.cm.Blues, alpha=0.3)
+    for i in range(confmat.shape[0]):
+        for j in range(confmat.shape[1]):
+            ax.text(x=j, y=i, s=confmat[i, j], va='center', ha='center', fontsize=7)
+
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+
+    plt.tight_layout()
+    plt.savefig('ConMatrix.png', dpi=600)
+    plt.show()
 
 def bernoulli(y_name, df):
     # Binaries
