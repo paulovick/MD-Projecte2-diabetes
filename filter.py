@@ -4,6 +4,7 @@
 from decisionTree import decisionTree
 from preprocessing import *
 from KNN import *
+from adaboost import *
 #dataset = read_and_filter_dataset(preprocess=True,nrows=6000,save_csv=True)
 dataset = read_and_filter_dataset(use_preprocessed=True)
 
@@ -14,8 +15,9 @@ dataset = read_and_filter_dataset(use_preprocessed=True)
 #svm(dataset)
 if __name__ == "__main__":
 	#sense la linia de dalt, executeKNN quedara en loop infinit
-	executeKNN(dataset)
+	#executeKNN(dataset)
 	#decisionTree(dataset)
+	adaboost(dataset)
 
 # from sklearn import preprocessing
 # import matplotlib.pyplot as plt
