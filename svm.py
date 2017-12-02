@@ -35,7 +35,7 @@ def svm(df):
     print("Confusion matrix on test set:\n", sklearn.metrics.confusion_matrix(y_test, pred))
     print("\nAccuracy on test set: ", sklearn.metrics.accuracy_score(y_test, pred))
 
-    knc = SVC(kernel='poly')
+    knc = SVC(kernel='poly', degree=2)
     knc.fit(X_train, y_train)
     pred = knc.predict(X_test)
     print("Confusion matrix on test set:\n", sklearn.metrics.confusion_matrix(y_test, pred))
