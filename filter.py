@@ -1,11 +1,10 @@
-from naive_bayes import naive_bayes
+#from naive_bayes import naive_bayes
 # from svm import svm
-# from KNN import executeKNN
+from KNN import executeKNN
 # from decisionTree import decisionTree
 from preprocessing import *
 from KNN import *
 from adaboost import *
-from svm import svm
 
 
 def splitting(ds, nrows):
@@ -17,7 +16,7 @@ def splitting(ds, nrows):
     d = {k:round(float(v), 2) for k,v in d_temp.items()}
     print("% of value to predict ({}) BEFORE splitting dataset: {}".format(y_name, d))
 
-    X = ds.drop(['readmitted'], axis=1)
+    X = ds.drop(['readmitted',], axis=1)
 
     (X1, Xresta, y1, yresta) = cv.train_test_split(X, y, train_size=nrows, random_state=1, stratify=y)
 
@@ -36,13 +35,28 @@ X, y = splitting(dataset, nrows=5000)
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
 
-# naive_bayes(dataset)
-# svm(dataset)
 
 if __name__ == "__main__":
     # sense la linia de dalt, executeKNN quedara en loop infinit
-    # executeKNN(dataset)
-    naive_bayes(X, y)
-    # decisionTree(dataset)
-    # svm(dataset)
-    # adaboost(dataset)
+    
+    Xaux = X
+    '''
+    i = 0
+    
+    for column in X:
+        print (column)
+        X = Xaux
+        X = X.drop(column, axis=1)
+        executeKNN(X, y)
+        ++i
+    '''
+    X = Xaux
+    X = X.drop(['num_lab_procedures',  'age', 'number_diagnoses', 'time_in_hospital'], axis=1)
+    print ("******")
+    executeKNN(X, y)
+
+        
+        # naive_bayes(X, y)
+        # decisionTree(dataset)
+        # svm(dataset)
+        # adaboost(dataset)
