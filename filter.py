@@ -5,6 +5,7 @@ from naive_bayes import naive_bayes
 from preprocessing import *
 from KNN import *
 from adaboost import *
+from svm import svm
 
 
 def splitting(ds, nrows):
@@ -35,6 +36,8 @@ X, y = splitting(dataset, nrows=5000)
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
 
+# naive_bayes(dataset)
+# svm(dataset)
 
 if __name__ == "__main__":
     # sense la linia de dalt, executeKNN quedara en loop infinit
