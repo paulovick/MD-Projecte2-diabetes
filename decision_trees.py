@@ -7,6 +7,7 @@ from sklearn.externals.six import StringIO
 import pydot
 from IPython.display import Image
 from statsmodels.stats.proportion import proportion_confint
+from sklearn.model_selection import cross_val_score  
 
 def execute_decision_trees(X, y):
 
@@ -24,10 +25,14 @@ def execute_decision_trees(X, y):
     print(sklearn.metrics.classification_report(y_test, pred))
     print("Confidence interval: ", proportion_confint(count=score*X_test.shape[0], nobs=X_test.shape[0], alpha=0.05, method='binom_test'))
 
-    # dot_data = StringIO()
-    # tree.export_graphviz(clf, out_file=dot_data,
-    #                     filled=True, rounded=True,
-    #                     feature_names=list(X.columns.values),
-    #                     special_characters=True)
-    # graph = pydot.graph_from_dot_data(dot_data.getvalue())
-    # Image(graph[0].create_png())
+    cv_scores = cross_val_score(tree.DecisionTreeClassifier(criterion="entropy"), X=X, y=y,  cv=10, scoring='accuracy') 
+    print (cv_scores)
+    print(np.mean(cv_scores))
+    print(np.std(cv_scores))
+    #dot_data = StringIO()
+    #tree.export_graphviz(clf, out_file=dot_data,
+    #                    filled=True, rounded=True,
+    #                    feature_names=list(X.columns.values),
+    #                    special_characters=True)
+    #graph = pydot.graph_from_dot_data(dot_data.getvalue())
+    #Image(graph[0].create_png())
