@@ -4,7 +4,7 @@ import sklearn.model_selection as cv
 import sklearn
 from sklearn import tree
 from sklearn.externals.six import StringIO  
-import pydot
+# import pydot
 from IPython.display import Image
 from statsmodels.stats.proportion import proportion_confint
 
@@ -18,9 +18,9 @@ def execute_decision_trees(dataset):
     # print(dataset.head())
 
     # X = dataset[['diag_1','diag_2','diag_3']]
-    X = dataset[['metformin','repaglinide','nateglinide','chlorpropamide','glimepiride','acetohexamide','glipizide','glyburide','tolbutamide','pioglitazone','rosiglitazone','acarbose','miglitol','troglitazone','tolazamide']]
-    # X = dataset.drop(['readmitted'], axis=1)
-    y = dataset['readmitted']
+    # X = dataset[['metformin','repaglinide','nateglinide','chlorpropamide','glimepiride','acetohexamide','glipizide','glyburide','tolbutamide','pioglitazone','rosiglitazone','acarbose','miglitol','troglitazone','tolazamide']]
+    X = dataset.drop(['readmitted'], axis=1).values
+    y = dataset['readmitted'].values
 
     # print(X.shape)
     # print(X.head())
