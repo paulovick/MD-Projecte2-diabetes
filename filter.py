@@ -1,7 +1,7 @@
 from naive_bayes import naive_bayes
 # from svm import svm
 # from KNN import executeKNN
-# from decisionTree import decisionTree
+from decision_trees import decision_trees
 from preprocessing import *
 from KNN import *
 from svm import svm
@@ -30,7 +30,7 @@ def splitting(ds, nrows):
 
 #dataset = read_and_filter_dataset(preprocess=True, save_csv=True)
 dataset = read_and_filter_dataset(use_preprocessed=True)
-X, y = splitting(dataset, nrows=5000)
+X, y = splitting(dataset, nrows=3000)
 
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # sense la linia de dalt, executeKNN quedara en loop infinit
     # executeKNN(dataset)
     naive_bayes(X, y)
-    # decisionTree(dataset)
+    # decision_trees(X, y)
     # svm(dataset)
     # adaboost(dataset)
     # bagging(dataset)
