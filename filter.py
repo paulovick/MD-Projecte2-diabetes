@@ -28,8 +28,8 @@ def splitting(ds, nrows):
     return X1, y1
 
 
-dataset = read_and_filter_dataset(preprocess=True, save_csv=True)
-#dataset = read_and_filter_dataset(use_preprocessed=True)
+#dataset = read_and_filter_dataset(preprocess=True, save_csv=True, nrows=5000)
+dataset = read_and_filter_dataset(use_preprocessed=True)
 X, y = splitting(dataset, nrows=4000)
 
 # plot_statistics(dataset)
@@ -39,7 +39,7 @@ X, y = splitting(dataset, nrows=4000)
 if __name__ == "__main__":
     # sense la linia de dalt, executeKNN quedara en loop infinit
     # executeKNN(dataset)
-    #naive_bayes(X, y)
+    # naive_bayes(X, y)
     execute_decision_trees(X, y)
     # svm(dataset)
     # adaboost(dataset)

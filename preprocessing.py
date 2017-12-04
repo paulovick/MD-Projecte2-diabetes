@@ -59,8 +59,10 @@ def read_and_filter_dataset(use_preprocessed=False,preprocess=True,nrows=5000,sa
 
         # Erase nulls
 
-        dataset = dataset.fillna(dataset.mean())
+        # dataset = dataset.fillna(dataset.mean())
         # print(dataset.isnull().any())
+        dataset = pd.get_dummies(dataset, prefix=None)
+        dataset = dataset.fillna(round(dataset.mean()))
 
     # Save
 
