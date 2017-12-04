@@ -1,38 +1,45 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-from utils import *
-import matplotlib.pyplot as plt
-from pandas.tools import plotting
-from preprocessing import *
+# from naive_bayes import naive_bayes
+# from svm import svm
+# from KNN import executeKNN
 from decision_trees import *
+from preprocessing import *
+# from KNN import *
+# from adaboost import *
 
-dataset = read_and_filter_dataset(preprocess=True,nrows=5000,save_csv=True)
-# dataset = read_and_filter_dataset(use_preprocessed=True)
+
+def splitting(ds, nrows):
+    y_name = "readmitted"  # value to predict
+    y = ds[y_name]
+    #Count y_value
+    unique, counts = np.unique(y, return_counts=True)
+    d_temp = dict(zip(unique, counts/len(y)*100))
+    d = {k:round(float(v), 2) for k,v in d_temp.items()}
+    print("% of value to predict ({}) BEFORE splitting dataset: {}".format(y_name, d))
+
+    X = ds.drop(['readmitted'], axis=1)
+
+    (X1, Xresta, y1, yresta) = cv.train_test_split(X, y, train_size=nrows, random_state=1, stratify=y)
+
+    # Count y_value
+    unique, counts = np.unique(y1, return_counts=True)
+    d_temp = dict(zip(unique, counts / len(y1) * 100))
+    d = {k: round(float(v), 2) for k, v in d_temp.items()}
+    print("% of value to predict ({}) AFTER splitting dataset: {}".format(y_name, d))
+    return X1, y1
+
+
+dataset = read_and_filter_dataset(preprocess=True, save_csv=True)
+#dataset = read_and_filter_dataset(use_preprocessed=True)
+X, y = splitting(dataset, nrows=4000)
 
 # plot_statistics(dataset)
 # plot_null_statistics(dataset)
 
-execute_decision_trees(dataset)
 
-
-# X = np.array(dataset.drop('readmitted',1))
-# X = np.array(dataset[['gender','race','age']])
-# y = np.array(dataset['readmitted'])
-
-# from sklearn import cross_validation
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn import metrics
-# from os import system
-
-# X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.3, random_state=0)
-# print(X_train.shape)
-# print(X_test.shape)
-
-# clf = DecisionTreeClassifier(random_state=0).fit(X_train, y_train)
-# clf.score(X_test, y_test)     
-# y_pred = clf.predict(X_test)
-# print("Classification Report:")
-# print(metrics.classification_report(y_test, y_pred))
-# print("Confusion Matrix:")
-# print(metrics.confusion_matrix(y_test, y_pred))
+if __name__ == "__main__":
+    # sense la linia de dalt, executeKNN quedara en loop infinit
+    # executeKNN(dataset)
+    #naive_bayes(X, y)
+    execute_decision_trees(X, y)
+    # svm(dataset)
+    # adaboost(dataset)
