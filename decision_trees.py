@@ -4,26 +4,11 @@ import sklearn.model_selection as cv
 import sklearn
 from sklearn import tree
 from sklearn.externals.six import StringIO  
-# import pydot
+import pydot
 from IPython.display import Image
 from statsmodels.stats.proportion import proportion_confint
 
-def preprocess_for_decision_trees(dataset):
-    # TODO
-    return dataset
-
-def execute_decision_trees(dataset):
-    dataset = preprocess_for_decision_trees(dataset)
-
-    # print(dataset.head())
-
-    # X = dataset[['diag_1','diag_2','diag_3']]
-    # X = dataset[['metformin','repaglinide','nateglinide','chlorpropamide','glimepiride','acetohexamide','glipizide','glyburide','tolbutamide','pioglitazone','rosiglitazone','acarbose','miglitol','troglitazone','tolazamide']]
-    X = dataset.drop(['readmitted'], axis=1).values
-    y = dataset['readmitted'].values
-
-    # print(X.shape)
-    # print(X.head())
+def execute_decision_trees(X, y):
 
     (X_train, X_test, y_train, y_test) = cv.train_test_split(X, y, test_size=.3, random_state=0)
 
