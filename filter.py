@@ -4,9 +4,8 @@ from naive_bayes import naive_bayes
 # from decisionTree import decisionTree
 from preprocessing import *
 from KNN import *
-from adaboost import *
 from svm import svm
-
+from meta_methods import *
 
 def splitting(ds, nrows):
     y_name = "readmitted"  # value to predict
@@ -46,3 +45,4 @@ if __name__ == "__main__":
     # decisionTree(dataset)
     # svm(dataset)
     # adaboost(dataset)
+    # bagging(dataset)
